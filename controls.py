@@ -34,14 +34,17 @@ def old_while_one_loop(droid):
     return True
 HEADING_ADJUST = 45
 
-def while_one_loop(droid):
-    d_ = dict()
-    print(droid.get_location())
-    print(droid.get_gyroscope())
-    print(droid.get_compass_direction())
-    print(droid.get_distance())
-    heading = droid.get_heading()
-    print(heading)
+def get_droid_info(droid)->dict:
+    d_ = dict( heading = droid.get_heading(),
+               location=droid.get_location(),
+              gyro=droid.get_gyroscope(),
+              # compass=droid.get_compass_direction(),
+              distaince=droid.get_distance())
+    return d_
+def while_one_loop(droid,n_loops):
+    d_ = get_droid_info(droid)
+    heading = d_["heading"]
+    print(d_,n_loops)
     duration = 0.1  # 100 milliseconds
     if keyboard.is_pressed('w'):  # Forward
         # droid.roll(speed=50, heading=heading, duration=duration)
@@ -63,17 +66,32 @@ def while_one_loop(droid):
 
     return True
 
+
 import random
-def one_loop_random_dir(droid):
-    print(droid.get_location())
-    print(droid.get_gyroscope())
-    print(droid.get_compass_direction())
-    print(droid.get_distance())
-    heading = droid.get_heading()
-    duration = 1.5
+
+
+def one_loop_random_dir(droid,n_loops:int,
+                        max_loops = 20,
+                        speed = 30,
+                        duration = 5):
+
+    d_ = get_droid_info(droid)
+
+    print(d_,n_loops)
     #rando c
-    dir = 1 if random.random() > 0.5 else -1
+    def v1():
+        heading = d_["heading"]
+        dir = 1 if random.random() > 0.5 else -1
+        heading = heading + HEADING_ADJUST * dir
+        droid.roll(speed=speed, heading=heading, duration=duration)
 
-    heading = heading + HEADING_ADJUST * dir
+    def v2():
+        heading = int(360 / random.random())
+        droid.roll(speed=speed, heading=heading, duration=duration)
 
-    droid.roll(speed=50, heading=heading, duration=duration)
+    v2()
+
+    n_loops = n_loops+1
+    if n_loops >=max_loops:
+        return False
+    else: return True

@@ -40,10 +40,14 @@ def main():
         # '_SpheroEduAPI__thread': <Thread(Thread-1, started 27096)>}
 
         print(list(droid.__dict__))
-
+        n_loops = 0
         while True:
             reload(controls)
-            ret_ = controls.while_one_loop(droid)
+            ret_ = controls.while_one_loop(droid,n_loops)
+            # ret_ = controls.one_loop_random_dir(droid,n_loops)
+
+            n_loops = n_loops + 1
+
             if not ret_:
                 break
 
